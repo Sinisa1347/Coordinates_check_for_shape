@@ -1,6 +1,6 @@
 import math
 
-class Point:
+class Shape:
     def __init__(self, coordinates):
         self.coordinates = coordinates
 
@@ -9,7 +9,7 @@ def loadCordsFromFile(coordinatesFile):
 
     try:
         with open(coordinatesFile, 'r') as file: 
-                pointCoordinates = [Point(line.strip().split(',')) for line in file]          
+                pointCoordinates = [Shape(line.strip().split(',')) for line in file]          
                 return pointCoordinates
     except:
         print(f'Fajl pod nazivom {coordinatesFile} ne postoji')         
@@ -38,8 +38,6 @@ def checkIfXisInside(pointCoordinates, X):
 
 def dimensional_diagonal(pointCoordinates):
     coordinates = [list(map(float, cord.coordinates)) for cord in pointCoordinates]
-    #diagonalCubed = [(max(coord) - min(coord)) ** 2 for coord in zip(*coordinates)]
-    #diagonalRooted = []
 
     sizeOfSides = [(max(coord) - min(coord)) ** 2 for coord in zip(*coordinates)]
     diagonal =  math.sqrt(sum ([(max(coord) - min(coord)) ** 2 for coord in zip(*coordinates)]))
