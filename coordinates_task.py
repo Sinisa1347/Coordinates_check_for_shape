@@ -52,9 +52,6 @@ class Rectangle(Shape):
         if(len(differentSizes)>=2):
             print("------------------")
             print("Coordinates form a rectangle")
-            print("Different sizes in rectangle are:")
-            for size in differentSizes:
-                print(size)
 
     
 class Cuboid(Shape):
@@ -78,9 +75,6 @@ class Cuboid(Shape):
         if(len(differentSizes)>=3):
             print("------------------")
             print("Coordinates form a cuboid")
-            print("Different sizes in cuboid are:")
-            for size in differentSizes:
-                print(size)
 
 def loadCordsFromFile(coordinatesFile):
     with open(coordinatesFile, 'r') as file: 
