@@ -2,7 +2,85 @@ import math
 
 class Shape:
     def __init__(self, coordinates):
-        self.coordinates = coordinates
+        self.coordinates = coordinates     
+
+    def checkCountOfCoordinates(self,pointCoordinates):
+        for i in range(len(pointCoordinates)):
+            if len(pointCoordinates[i].coordinates) != len(pointCoordinates[0].coordinates):
+                return 0
+
+        return len(pointCoordinates)
+
+    def checkIfXisInside(self,pointCoordinates, X):
+        min_coordinates =[min(coord) for coord in zip(*[cords.coordinates for cords in pointCoordinates])]#vraca min [x1,x2,x3..][y1,y2,y3...]..
+        max_coordinates = [max(coord) for coord in zip(*[cords.coordinates for cords in pointCoordinates])]
+        
+        for i in range(len(X.coordinates)):
+            if X.coordinates[i] < min_coordinates[i] or X.coordinates[i] > max_coordinates[i]:
+                return False
+        return True
+
+    def dimensional_diagonal(self,pointCoordinates):
+        coordinates = [list(map(float, cord.coordinates)) for cord in pointCoordinates]
+        diagonal =  math.sqrt(sum ([(max(coord) - min(coord)) ** 2 for coord in zip(*coordinates)]))
+        return diagonal
+        
+    def differentSizeOfSides(self,pointCoordinates):
+        coordinates = [list(map(float, cord.coordinates)) for cord in pointCoordinates]
+        sizeOfSides = set([(max(coord) - min(coord)) for coord in zip(*coordinates)])
+
+        return sizeOfSides
+        
+class Rectangle(Shape):
+    def __init__(self, coordinates):
+        super().__init__(coordinates)
+
+    def checkIfXisInside(self, pointCoordinates, X):
+        
+        if(super().checkIfXisInside(pointCoordinates, X)):
+            print("X is inside the rectangle")
+        else:
+            print("X isn't inside the rectangle")
+    
+    def dimensional_diagonal(self, pointCoordinates):
+        diagonal = super().dimensional_diagonal(pointCoordinates)
+        print("------------------")
+        print(f'Diagonal of rectangle is: {diagonal}')
+
+    def differentSizeOfSides(self,pointCoordinates):
+        differentSizes = super().differentSizeOfSides(pointCoordinates)
+        if(len(differentSizes)==2):
+            print("------------------")
+            print("Coordinates form a rectangle")
+            print("Different sizes in rectangle are:")
+            for size in differentSizes:
+                print(size)
+
+    
+class Cuboid(Shape):
+    def __init__(self, coordinates):
+        super().__init__(coordinates)
+
+    def checkIfXisInside(self, pointCoordinates, X):
+        
+        if(super().checkIfXisInside(pointCoordinates, X)):
+            print("X is inside the cuboid")
+        else:
+            print("X isn't inside the cuboid")
+    
+    def dimensional_diagonal(self, pointCoordinates):
+        diagonal = super().dimensional_diagonal(pointCoordinates)
+        print("------------------")
+        print(f'Diagonal of cuboid is: {diagonal}')
+
+    def differentSizeOfSides(self,pointCoordinates):
+        differentSizes = super().differentSizeOfSides(pointCoordinates)
+        if(len(differentSizes)==3):
+            print("------------------")
+            print("Coordinates form a cuboid")
+            print("Different sizes in cuboid are:")
+            for size in differentSizes:
+                print(size)
 
 def loadCordsFromFile(coordinatesFile):
     #coordinatesFile = "koordinate.txt"
@@ -12,73 +90,40 @@ def loadCordsFromFile(coordinatesFile):
                 pointCoordinates = [Shape(line.strip().split(',')) for line in file]          
                 return pointCoordinates
     except:
-        print(f'Fajl pod nazivom {coordinatesFile} ne postoji')         
-
-def checkCountOfCoordinates(pointCoordinates):
-    for i in range(len(pointCoordinates)):
-        if len(pointCoordinates[i].coordinates) != len(pointCoordinates[0].coordinates):
-            print("Coordinates determine unknown figure")
-            return False
-    if(len(pointCoordinates)==3):
-        print("Cordinates have a chance to form a rectangle")
-    
-    if(len(pointCoordinates)==4):
-        print("Cordinates have a chance to form a cuboid")
-
-    return True
-
-def checkIfXisInside(pointCoordinates, X):
-    min_coordinates =[min(coord) for coord in zip(*[cords.coordinates for cords in pointCoordinates])]#vraca min [x1,x2,x3..][y1,y2,y3...]..
-    max_coordinates = [max(coord) for coord in zip(*[cords.coordinates for cords in pointCoordinates])]
-    
-    for i in range(len(X.coordinates)):
-        if X.coordinates[i] < min_coordinates[i] or X.coordinates[i] > max_coordinates[i]:
-            return False
-    return True
-
-def dimensional_diagonal(pointCoordinates):
-    coordinates = [list(map(float, cord.coordinates)) for cord in pointCoordinates]
-
-    sizeOfSides = [(max(coord) - min(coord)) ** 2 for coord in zip(*coordinates)]
-    diagonal =  math.sqrt(sum ([(max(coord) - min(coord)) ** 2 for coord in zip(*coordinates)]))
-    
-        
-
-    if len(set(sizeOfSides)) == 2:
-        print("------------------")
-        print("Coordinates form a rectangle")
-        print(f'Diagonal of rectangle is: {diagonal}')
-        print("------------------")
-        return True
-    elif len(set(sizeOfSides)) == 3:
-        print("------------------")
-        print("Coordinates form a cuboid")
-        print(f'Diagonal of cuboid is: {diagonal}')
-        print("------------------")
-        return True
-    else:
-        print("Coordinates form an unknown shape!!!")
-        return False
+        print(f'Fajl pod nazivom {coordinatesFile} ne postoji')    
 
 def main():
     try:
         listOfCordinates = loadCordsFromFile("coordinates.txt")
-        
-        X=listOfCordinates.pop()
+        if(len(listOfCordinates)!=0):
+            X=listOfCordinates.pop()
 
-        if(checkCountOfCoordinates(listOfCordinates)):#check if cords can determine rectangle or cuboid
-            if(dimensional_diagonal(listOfCordinates)):
-                if checkIfXisInside(listOfCordinates, X):
-                    print("X is inside the shape")
-                    print ("True")
+            shape = Shape(listOfCordinates)
+            rectangle = Rectangle(listOfCordinates)
+            cuboid = Cuboid(listOfCordinates)
+
+            countOfCoordinates=shape.checkCountOfCoordinates(listOfCordinates)
+            differentSizeOfSides=shape.differentSizeOfSides(listOfCordinates)
+
+            if countOfCoordinates == 3:
+                if(len(differentSizeOfSides)==2):
+                    rectangle.differentSizeOfSides(listOfCordinates)
+                    rectangle.dimensional_diagonal(listOfCordinates)
+                    rectangle.checkIfXisInside(listOfCordinates,X)
                 else:
-                    print("X isn't inside the shape")
-                    print ("False")
+                    print("Coordinates have necessary number of axis to form rectangle but their values aren't valid")
+            elif countOfCoordinates == 4:
+                if(len(differentSizeOfSides)==3):
+                    cuboid.differentSizeOfSides(listOfCordinates)
+                    cuboid.dimensional_diagonal(listOfCordinates)
+                    cuboid.checkIfXisInside(listOfCordinates,X)
+                else:
+                    print("Coordinates have necessary number of axis to form cuboid but their values aren't valid")
+            elif countOfCoordinates == 0:
+                print("Coordinates have uneven number of axis!!!")
         else:
-            print("Please check number of coordinates in each line in file")
+            print("File with coordinates hasn't been found")
 
-    except FileNotFoundError:
-        print("Datoteka s točkama nije pronađena.")
     except ValueError as e:
         print("Error:", e)
 
