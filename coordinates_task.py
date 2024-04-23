@@ -49,7 +49,7 @@ class Rectangle(Shape):
 
     def differentSizeOfSides(self,pointCoordinates):
         differentSizes = super().differentSizeOfSides(pointCoordinates)
-        if(len(differentSizes)==2):
+        if(len(differentSizes)>=2):
             print("------------------")
             print("Coordinates form a rectangle")
             print("Different sizes in rectangle are:")
@@ -75,7 +75,7 @@ class Cuboid(Shape):
 
     def differentSizeOfSides(self,pointCoordinates):
         differentSizes = super().differentSizeOfSides(pointCoordinates)
-        if(len(differentSizes)==3):
+        if(len(differentSizes)>=3):
             print("------------------")
             print("Coordinates form a cuboid")
             print("Different sizes in cuboid are:")
@@ -83,14 +83,9 @@ class Cuboid(Shape):
                 print(size)
 
 def loadCordsFromFile(coordinatesFile):
-    #coordinatesFile = "koordinate.txt"
-
-    try:
-        with open(coordinatesFile, 'r') as file: 
+    with open(coordinatesFile, 'r') as file: 
                 pointCoordinates = [Shape(line.strip().split(',')) for line in file]          
                 return pointCoordinates
-    except:
-        print(f'Fajl pod nazivom {coordinatesFile} ne postoji')    
 
 def main():
     try:
@@ -106,23 +101,23 @@ def main():
             differentSizeOfSides=shape.differentSizeOfSides(listOfCordinates)
 
             if countOfCoordinates == 3:
-                if(len(differentSizeOfSides)==2):
+                if(len(differentSizeOfSides)>=2):
                     rectangle.differentSizeOfSides(listOfCordinates)
                     rectangle.dimensional_diagonal(listOfCordinates)
                     rectangle.checkIfXisInside(listOfCordinates,X)
                 else:
-                    print("Coordinates have necessary number of axis to form rectangle but their values aren't valid")
+                    print("Coordinates have necessary number of axis to form a rectangle but their values aren't valid")
             elif countOfCoordinates == 4:
-                if(len(differentSizeOfSides)==3):
+                if(len(differentSizeOfSides)>=3):
                     cuboid.differentSizeOfSides(listOfCordinates)
                     cuboid.dimensional_diagonal(listOfCordinates)
                     cuboid.checkIfXisInside(listOfCordinates,X)
                 else:
-                    print("Coordinates have necessary number of axis to form cuboid but their values aren't valid")
+                    print("Coordinates have necessary number of axis to form a cuboid but their values aren't valid")
             elif countOfCoordinates == 0:
                 print("Coordinates have uneven number of axis!!!")
         else:
-            print("File with coordinates hasn't been found")
+            print("File doesn't contain coordindates")
 
     except ValueError as e:
         print("Error:", e)
